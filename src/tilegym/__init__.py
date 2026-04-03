@@ -17,8 +17,24 @@ def _check_torch_dependencies():
         ) from None
 
 
+def _check_ct_experimental_dependency():
+    """Verify that cuda-tile-experimental is installed with helpful error message."""
+    try:
+        import cuda.tile_experimental  # noqa: F401
+    except (ImportError, ModuleNotFoundError):
+        raise ImportError(
+            "\n\n[TileGym] cuda-tile-experimental is required but not installed.\n"
+            "It is not available on PyPI and must be installed from source:\n\n"
+            '  pip install "cuda-tile-experimental @ '
+            'git+https://github.com/NVIDIA/cutile-python.git#subdirectory=experimental"\n\n'
+            "See: https://github.com/NVIDIA/cutile-python?tab=readme-ov-file"
+            "#experimental-features-optional\n"
+        ) from None
+
+
 # Check dependencies before any imports
 _check_torch_dependencies()
+_check_ct_experimental_dependency()
 
 # Import logging utilities
 from .logger import get_logger
